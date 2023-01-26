@@ -1,2 +1,2 @@
-# web-nft-marketplace
+# Web NFT Marketplace
 Website for NFT marketplace
