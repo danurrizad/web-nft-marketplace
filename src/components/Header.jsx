@@ -22,7 +22,7 @@ const Header = () => {
                 <h1 className='font-bold text-white 2xl:px-20 px-10 text-left 2xl:w-1/2 2xl:text-[150px] text-[70px]'>NFT</h1>
                 <p className='text-white text-left 2xl:px-20 px-10 2xl:w-2/3 2xl:text-[28px]'>NFTs that have a unique appearance and can be used for gaming, education, or other interactive experiences.</p>
                 <div className='pt-4 2xl:w-1/2'>
-                    <a href='#content' className=' text-white text-left 2xl:mx-20 mx-10 py-2 px-8 rounded-3xl 2xl:text-[28px] bg-slate-900 hover:text-slate-900 hover:bg-white'>Let's hit the store</a>
+                    <a href='#store' className=' text-white text-left 2xl:mx-20 mx-10 py-2 px-8 rounded-3xl 2xl:text-[28px] bg-slate-900 hover:text-slate-900 hover:bg-white'>Let's hit the store</a>
                 </div>
             </div>
             <div className='flex absolute right-0 bottom-0'>
