@@ -40,19 +40,20 @@ const Content = ({isConnected, setIsConnected}) => {
     };
 
   return (
-    <div id='content' className='min-h-screen bg-slate-300'>
-        <div>
-            <h1 className='text-center text-[72px]'>Store</h1>
-            <div className='justify-between flex px-4 text-[30px]'>
-                <h1 className='pt-1'>Wallet address : </h1>
-                <button className='bg-slate-800 text-white py-1 px-6 hover:bg-white hover:text-slate-800 rounded-xl' onClick={Connect}>Connect Walllet</button>
+    <div id='store' className='min-h-screen bg-slate-300'>
+        <section id='header-content'>
+            <div>
+                <h1 className='text-center text-[72px] pb-12'>Store</h1>
+                <div className='justify-center flex-1 text-center px-4 2xl:text-[30px] xl:text-[30px] lg:text-[30px] md:text-[30px] text-[15px]'>
+                <button className='bg-slate-800 text-white  py-1 px-6 hover:bg-white hover:text-slate-800 rounded-xl' onClick={Connect}>Connect Walllet</button>
+                    <h1 className='pt-1'>Wallet address : </h1>
+                    <div className='px-4 2xl:text-[28px] xl:text-[28px] lg:text-[28px] md:text-[28px] text-[15px]'>
+                        <span id="wallet-address" className='rounded-3xl px-4 py-1' ></span>
+                        {isConnected ? <p className='pl-4 text-[20px] text-green-400'>{msg}</p> : <p className='pl-4 text-[20px] text-red-400'>{msg}</p>}
+                    </div>
+                </div>
             </div>
-            <div >
-                <div id="wallet-address" className='px-4 text-[28px]'></div>
-                {isConnected ? <p className='pl-4 text-[20px] text-green-400'>{msg}</p> : <p className='pl-4 text-[20px] text-red-400'>{msg}</p>}
-                
-            </div>
-        </div>
+        </section>
         
         <section id='nft-store'>
             {/* 1-4*/}
