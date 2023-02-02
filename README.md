@@ -2,6 +2,7 @@
 
 Try running some of the following tasks:
 
+- npm install
 - npx hardhat test <br>
 - npx hardhat node <br>
 - npx hardhat run src/backend/scripts/deploy.js --network localhost <br>
