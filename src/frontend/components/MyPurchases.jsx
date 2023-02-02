@@ -4,42 +4,41 @@ import Navbar from './Navbar'
 import NFT1 from '../assets/img/1.png'
 import NFT2 from '../assets/img/2.png'
 
-const MyPurchases = ({isConnected, setIsConnected, accounts, setAccounts}) => {
+const MyPurchases = ({account}) => {
 
-    if (!accounts) return (
+    if (!account) return (
         <main className='bg-slate-300 min-h-screen'>
-        <div>
-            <Navbar accounts={accounts} setAccounts={setAccounts} isConnected={isConnected} setIsConnected={setIsConnected}/>
-        </div>
-          <h1 className='flex justify-center items-center flex-col py-8 text-[50px] px-8'>Please connect your wallet to see your purchases...</h1>
+          <h1 className='flex justify-center items-center flex-col p-8 2xl:text-[50px] xl:text-[50px] lg:text-[50px] text-[20px] text-center '>Please connect your wallet to see your purchases...</h1>
         </main>
       )
   return (
     <div>
         <div className='bg-slate-300 min-h-screen'>
-            <Navbar accounts={accounts} setAccounts={setAccounts} isConnected={isConnected} setIsConnected={setIsConnected}/>
-            <div className='px-10'>
-                <h1 className='2xl:text-[70px] xl:text-[70px] lg:text-[70px] text-[50px]'>My Purchases</h1>
+            <div className='py-8 px-10'>
+                <h1 className='2xl:text-[70px] xl:text-[70px] lg:text-[70px] text-[50px] text-center'>My Purchases</h1>
             </div>
             <div>
-                {/* 1-4*/}
-            <div className='justify-center flex-1 gap-y-10 2xl:flex 2xl:justify-center 2xl:gap-0 2xl:p-8 py-8 px-2'>
-                {/*1-2 */}
-                <div className='flex justify-center gap-10 2xl:justify-center 2xl:gap-20 2xl:p-8'>
-                    <div className='pb-4 bg-slate-100 border-solid border-2 border-black w-[300px] xl:h-[400px]'> 
-                        <img src={NFT1} alt='NFT-1'/>
-                        <h1 className='text-center text-[20px]'>VR Boy NFT #1</h1>
-                        <div className='text-center'>
-                            
+            <div className='justify-center flex-1 gap-y-10 2xl:flex 2xl:justify-center 2xl:gap-0 2xl:p-8 px-2'>
+                {/*{purchases.length > 0 ? (
+                <div className="px-5 container">
+                    <div className="g-4 py-5">
+                        {purchases.map((item, idx) => (
+                        <div key={idx} className="overflow-hidden">
+                            <div>
+                                <img variant="top" src={item.image} />
+                                <div>{ethers.utils.formatEther(item.totalPrice)} ETH</div>
+                            </div>
                         </div>
+                        ))}
                     </div>
-                    <div className='bg-slate-100 border-solid border-2 border-black w-[300px]'> 
-                        <img src={NFT2} alt='NFT-2'/>
-                        <h1 className='text-center text-[20px]'>VR Boy NFT #2</h1>
-                        <div className='text-center'>
-                            
-                        </div>
-                    </div>
+                </div>)
+                : (
+                <div className=''>
+                    <h2 className='text-[30px]'>You don't have any purchases</h2>
+                </div>
+                )} */}
+                <div className=''>
+                    <h2 className='text-center 2xl:text-[30px] xl:text-[30px] lg:text-[30px] text-[20px]'>You don't have any purchases</h2>
                 </div>
             </div>
             </div>

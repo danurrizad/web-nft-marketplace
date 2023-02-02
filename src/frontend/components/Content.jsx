@@ -1,4 +1,5 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
+
 
 import NFT1 from '../assets/img/1.png'
 import NFT2 from '../assets/img/2.png'
@@ -15,7 +16,43 @@ import NFT12 from '../assets/img/12.png'
 
 
 
-const Content = ({accounts}) => {
+const Content = ({account, nft, marketplace}) => {
+
+    const [items, setItems] = useState([])
+
+    const loadMarketplaceItems = async () => {
+        // Load all unsold items
+        const itemCount = await marketplace.itemCount()
+        let items = []
+        for (let i = 1; i <= itemCount; i++) {
+            const item = await marketplace.items(i)
+            if (!item.sold) {
+                // get uri url from nft contract
+                const uri = await nft.tokenURI(item.tokenId)
+                // use uri to fetch the nft metadata stored on ipfs 
+                const response = await fetch(uri)
+                const metadata = await response.json()
+                // get total price of item (item price + fee)
+                const totalPrice = await marketplace.getTotalPrice(item.itemId)
+                // Add item to items array
+                items.push({
+                    totalPrice,
+                    itemId: item.itemId,
+                    seller: item.seller,
+                    name: metadata.name,
+                    description: metadata.description,
+                    image: metadata.image
+                })
+            }
+        }
+        setItems(items)
+    }
+
+    useEffect(() => {
+      loadMarketplaceItems()
+    }, [])
+    
+
   return (
     <div id='store' className='min-h-screen bg-slate-300'>
         <section id='header-content'>
@@ -23,7 +60,7 @@ const Content = ({accounts}) => {
                 <h1 className='text-center text-[72px] pb-12'>Store</h1>
                 <div className='justify-center flex-1 text-center px-4 2xl:text-[30px] xl:text-[30px] lg:text-[30px] md:text-[30px] text-[15px]'>
                     <h1 className='pt-1'>Wallet address :</h1>
-                    <h1 className=''>{accounts}</h1>
+                    {account ? (<div className='flex justify-center'><h1 className='bg-slate-100 px-4 py-1 rounded-full'>{account}</h1></div>) : null}
                     
                     <div className='px-4 2xl:text-[28px] xl:text-[28px] lg:text-[28px] md:text-[28px] text-[15px]'>
                         <span id="wallet-address" className='rounded-3xl px-4 py-1' ></span>
@@ -31,134 +68,34 @@ const Content = ({accounts}) => {
                 </div>
             </div>
         </section>
-        
-        <section id='nft-store'>
-            {/* 1-4*/}
-            <div className='justify-center flex-1 gap-y-10 2xl:flex 2xl:justify-center 2xl:gap-0 2xl:p-8 py-8 px-2'>
-                {/*1-2 */}
-                <div className='flex justify-center gap-10 2xl:justify-center 2xl:gap-20 2xl:p-8'>
-                    <div className='pb-4 bg-slate-100 border-solid border-2 border-black w-[300px] xl:h-[400px]'> 
-                        <img src={NFT1} alt='NFT-1'/>
-                        <h1 className='text-center text-[20px]'>VR Boy NFT #1</h1>
-                        <div className='text-center'>
-                            <p>Status : <span> </span><span className='text-green-600 font-bold'>Available</span></p>
-                            <button className='bg-green-300 py-1 px-10 rounded-3xl hover:bg-green-500'>Buy</button>
+        <section>
+            <div className='flex justify-center'>
+                {items.length > 0 ? (
+                    <div>
+                        <h1>ADA ITEM HARUSNYA</h1>
+                        <div>
+                            {items.map((item,index) => (
+                                <div key={index} className='pb-4 bg-slate-100 border-solid border-2 border-black w-[300px] xl:h-[400px]'> 
+                                    <img src={item.image} alt='NFT-1'/>
+                                    <h1 className='text-center text-[20px]'>{item.name}</h1>
+                                    <div className='text-center'>
+                                        <p>{item.description}</p>
+                                        <button className='bg-green-300 py-1 px-10 rounded-3xl hover:bg-green-500'>Buy</button>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
-                    <div className='bg-slate-100 border-solid border-2 border-black w-[300px]'> 
-                        <img src={NFT2} alt='NFT-2'/>
-                        <h1 className='text-center text-[20px]'>VR Boy NFT #2</h1>
-                        <div className='text-center'>
-                            <p>Status : <span> </span><span className='text-green-600 font-bold'>Available</span></p>
-                            <button className='bg-green-300 py-1 px-10 rounded-3xl hover:bg-green-500'>Buy</button>
-                        </div>
-                    </div>
-                </div>
-                {/*3-4 */}
-               <div className='flex justify-center gap-10 2xl:justify-center 2xl:gap-20 2xl:p-8 pt-16'>
-                    <div className='pb-4 bg-slate-100 border-solid border-2 border-black w-[300px]'> 
-                        <img src={NFT3} alt='NFT-3'/>
-                        <h1 className='text-center text-[20px]'>VR Boy NFT #3</h1>
-                        <div className='text-center'>
-                            <p>Status : <span> </span><span className='text-green-600 font-bold'>Available</span></p>
-                            <button className='bg-green-300 py-1 px-10 rounded-3xl hover:bg-green-500'>Buy</button>
-                        </div>
-                    </div>
-                    <div className='bg-slate-100 border-solid border-2 border-black w-[300px]'>
-                        <img src={NFT4} alt='NFT-4'/>
-                        <h1 className='text-center text-[20px]'>VR Boy NFT #4</h1>
-                        <div className='text-center'>
-                            <p>Status : <span> </span><span className='text-green-600 font-bold'>Available</span></p>
-                            <button className='bg-green-300 py-1 px-10 rounded-3xl hover:bg-green-500'>Buy</button>
-                        </div>
-                    </div>
-               </div>
-            </div>
-            
-            {/*5-8 */}
-            <div className='justify-center flex-1 2xl:flex 2xl:justify-center 2xl:gap-0 2xl:p-8 py-8 px-2'>
-                {/*5-6 */}
-                <div className='flex justify-center gap-10 2xl:justify-center 2xl:gap-20 2xl:p-8'>
-                    <div className='pb-4 bg-slate-100 border-solid border-2 border-black w-[300px] xl:h-[400px]'> 
-                        <img src={NFT5} alt='NFT-5'/>
-                        <h1 className='text-center text-[20px]'>VR Boy NFT #5</h1>
-                        <div className='text-center'>
-                            <p>Status : <span> </span><span className='text-green-600 font-bold'>Available</span></p>
-                            <button className='bg-green-300 py-1 px-10 rounded-3xl hover:bg-green-500'>Buy</button>
-                        </div>
-                    </div>
-                    <div className='bg-slate-100 border-solid border-2 border-black w-[300px]'> 
-                        <img src={NFT6} alt='NFT-6'/>
-                        <h1 className='text-center text-[20px]'>VR Boy NFT #6</h1>
-                        <div className='text-center'>
-                            <p>Status : <span> </span><span className='text-green-600 font-bold'>Available</span></p>
-                            <button className='bg-green-300 py-1 px-10 rounded-3xl hover:bg-green-500'>Buy</button>
-                        </div>
-                    </div>
-                </div>
-                {/*7-8 */}
-                <div className='flex justify-center gap-10 2xl:justify-center 2xl:gap-20 2xl:p-8 pt-16'>
-                    <div className='pb-4 bg-slate-100 border-solid border-2 border-black w-[300px] '> 
-                        <img src={NFT7} alt='NFT-7'/>
-                        <h1 className='text-center text-[20px]'>VR Boy NFT #7</h1>
-                        <div className='text-center'>
-                            <p>Status : <span> </span><span className='text-green-600 font-bold'>Available</span></p>
-                            <button className='bg-green-300 py-1 px-10 rounded-3xl hover:bg-green-500'>Buy</button>
-                        </div>
-                    </div>
-                    <div className='bg-slate-100 border-solid border-2 border-black w-[300px]'>
-                        <img src={NFT8} alt='NFT-8'/>
-                        <h1 className='text-center text-[20px]'>VR Boy NFT #8</h1>
-                        <div className='text-center'>
-                            <p>Status : <span> </span><span className='text-green-600 font-bold'>Available</span></p>
-                            <button className='bg-green-300 py-1 px-10 rounded-3xl hover:bg-green-500'>Buy</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            {/*9-12 */}
-            <div className='justify-center flex-1 2xl:flex 2xl:justify-center 2xl:gap-0 2xl:p-8 py-8 px-2'>
-                {/*9-10 */}
-                <div className='flex justify-center gap-10 2xl:justify-center 2xl:gap-20 2xl:p-8'>
-                    <div className='pb-4 bg-slate-100 border-solid border-2 border-black w-[300px] xl:h-[400px]'> 
-                        <img src={NFT9} alt='NFT-9'/>
-                        <h1 className='text-center text-[20px]'>VR Boy NFT #9</h1>
-                        <div className='text-center'>
-                            <p>Status : <span> </span><span className='text-green-600 font-bold'>Available</span></p>
-                            <button className='bg-green-300 py-1 px-10 rounded-3xl hover:bg-green-500'>Buy</button>
-                        </div>
-                    </div>
-                    <div className='bg-slate-100 border-solid border-2 border-black w-[300px]'> 
-                        <img src={NFT10} alt='NFT-10'/>
-                        <h1 className='text-center text-[20px]'>VR Boy NFT #10</h1>
-                        <div className='text-center'>
-                            <p>Status : <span> </span><span className='text-green-600 font-bold'>Available</span></p>
-                            <button className='bg-green-300 py-1 px-10 rounded-3xl hover:bg-green-500'>Buy</button>
-                        </div>
-                    </div>
-                </div>
-                {/*11-12 */}
-                <div className='flex justify-center gap-10 2xl:justify-center 2xl:gap-20 2xl:p-8 pt-16'>
-                    <div className='pb-4 bg-slate-100 border-solid border-2 border-black w-[300px]'> 
-                        <img src={NFT11} alt='NFT-11'/>
-                        <h1 className='text-center text-[20px]'>VR Boy NFT #11</h1>
-                        <div className='text-center'>
-                            <p>Status : <span> </span><span className='text-green-600 font-bold'>Available</span></p>
-                            <button className='bg-green-300 py-1 px-10 rounded-3xl hover:bg-green-500'>Buy</button>
-                        </div>
-                    </div>
-                    <div className='bg-slate-100 border-solid border-2 border-black w-[300px]'>
-                        <img src={NFT12} alt='NFT-12'/>
-                        <h1 className='text-center text-[20px]'>VR Boy NFT #12</h1>
-                        <div className='text-center'>
-                            <p>Status : <span> </span><span className='text-green-600 font-bold'>Available</span></p>
-                            <button className='bg-green-300 py-1 px-10 rounded-3xl hover:bg-green-500'>Buy</button>
-                        </div>
-                    </div>
-                </div>
+                ):(
+                    <main className='py-8 text-center px-4'>
+                        <h1 className='2xl:text-[40px] xl:text-[40px] lg:text-[40px] text-[20px]'>Unfortunately, there are no listed NFTs here for a moment</h1>
+                        <h1 className='2xl:text-[35px] xl:text-[35px] lg:text-[35px] text-[15px]'>Please comeback later...</h1>
+                    </main>
+                )}
             </div>
         </section>
+        
+        
     </div>
   )
 }
