@@ -6,6 +6,8 @@ module.exports = {
     "./src/frontend/components/Content.jsx",
     "./src/frontend/components/Footer.jsx",
     "./src/frontend/components/Manager.jsx",
+    "./src/frontend/components/CreateAndList.jsx",
+    "./src/frontend/components/MyListedNFT.jsx",
   ],
   theme: {
     extend: {},
