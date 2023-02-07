@@ -1,6 +1,6 @@
 import './App.css';
 import Navbar from './components/Navbar';
-import LandingPage from './components/LandingPage';
+import Home from './components/Home';
 import Manager from './components/Manager';
 import MyPurchases from './components/MyPurchases';
 
@@ -51,10 +51,10 @@ function App() {
 
 const loadContracts = async (signer) => {
   // Get deployed copies of contracts
-  const marketplace = new ethers.Contract(MarketplaceAddress.address, MarketplaceABI.abi, signer);
-  setMarketplace(marketplace);
-  const nft = new ethers.Contract(NFTAddress.address, NFTABI.abi, signer);
-  setNFT(nft);
+  const mymarketplace = new ethers.Contract(MarketplaceAddress.address, MarketplaceABI.abi, signer);
+  setMarketplace(mymarketplace);
+  const mynft = new ethers.Contract(NFTAddress.address, NFTABI.abi, signer);
+  setNFT(mynft);
 }
   
   return (
@@ -64,8 +64,7 @@ const loadContracts = async (signer) => {
           <Navbar isLoading={isLoading} account={account} showAlertSuccess={showAlertSuccess} setShowAlertSuccess={setShowAlertSuccess} showAlertError={showAlertError} setShowAlertError={setShowAlertError} Connect={Connect}/>
         </>
         <Routes>
-          <Route path="/" element={<LandingPage account={account} nft={nft} marketplace={marketplace}/>} />
-          <Route path="/home" element={<LandingPage account={account} nft={nft} marketplace={marketplace}/>}/>
+          <Route path="/" element={<Home account={account} nft={nft} marketplace={marketplace}/>} />
           <Route path="/manage" element={<Manager isLoading={isLoading} account={account} nft={nft} marketplace={marketplace}/>} />
           <Route path="/my-purchases" element={<MyPurchases isLoading={isLoading} account={account} nft={nft} marketplace={marketplace}/>} />
         </Routes>
