@@ -1,24 +1,31 @@
-import React, {useState} from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 
-const Navbar = ({textButton, showAlertSuccess, setShowAlertSuccess, showAlertError, setShowAlertError, Connect}) => {
+const Navbar = ({isLoading, account, showAlertSuccess, setShowAlertSuccess, showAlertError, setShowAlertError, Connect}) => {
 
   return (
     <div className='text-white text-[25px] bg-slate-800 z-50 relative shadow-md shadow-black'>
         <span className='justify-between flex'>
-            <span className='justify-start flex 2xl:gap-x-28 gap-x-4 text-[15px] 2xl:text-[25px] xl:text-[25px] lg:text-[25px] lg:gap-x-20 xl:gap-x-28 py-8 2xl:px-8 xl:px-8 lg:px-8 px-4 '>
+            <span className='justify-start flex 2xl:gap-x-28 gap-x-4 text-[13px] 2xl:text-[25px] xl:text-[25px] lg:text-[25px] lg:gap-x-20 xl:gap-x-28 py-8 2xl:px-8 xl:px-8 lg:px-8 px-4 '>
                 <Link to="/" className='hover:text-slate-300'>Home</Link>
-                <a href='#store'><Link to="/" className='hover:text-slate-300'>Store</Link></a>
+                <Link to="/" className='hover:text-slate-300'>Store</Link>
                 <Link to="/manage" className='hover:text-slate-300'>Manage</Link>
                 <Link to="/my-purchases" className='hover:text-slate-300 '>My Purchases</Link>
             </span>
             <span className='py-6 2xl:px-8 xl:px-8 px-1 2xl:text-[25px] xl:text-[25px] lg:text-[25px] text-[15px] '>
-                <button 
-                    className='bg-slate-900 w-full text-white border-white border-[1px] py-1 2xl:px-6 xl:px-6 lg:px-6 px-2 hover:bg-white hover:text-slate-900 hover:border-slate-900 rounded-xl' 
-                    onClick={Connect}>
-                        {textButton}
-                </button>
-                
+                {account? (
+                    <button 
+                        className='bg-slate-900 duration-200 shadow-xl shadow-black   w-full text-white border-slate-800 border-[1px] py-1 2xl:px-6 xl:px-6 lg:px-6 px-2 hover:bg-white hover:text-slate-900 hover:border-slate-900 rounded-xl' 
+                        onClick={Connect}>
+                            {account.slice(0, 6) + '...' + account.slice(37, 42)}
+                    </button>
+                ):(
+                    <button 
+                        className='bg-slate-900 duration-200 w-full shadow-xl shadow-black text-white border-slate-800 border-[1px] py-1 2xl:px-6 xl:px-6 lg:px-6 px-2 hover:bg-white hover:text-slate-900 hover:border-slate-900 rounded-xl' 
+                        onClick={Connect}>
+                            Connect Wallet
+                    </button>
+                )}
             </span>
         </span>
         <div>
