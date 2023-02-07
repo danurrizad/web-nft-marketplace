@@ -6,6 +6,7 @@ import MyPurchases from './components/MyPurchases';
 
 import { useState } from 'react';
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import ReactLoading from 'react-loading';
 
 import Web3 from 'web3';
 import { ethers } from 'ethers';
@@ -15,41 +16,36 @@ import NFTAddress from './contractsData/ERC721NFT-address.json';
 import NFTABI from './contractsData/ERC721NFT.json';
 
 function App() {
-  const [isConnected, setIsConnected] = useState(false);
   const [account, setAccount] = useState('');
-  const [textButton, setTextButton] = useState('Connect Wallet');
   const [showAlertSuccess, setShowAlertSuccess] = useState(false);
   const [showAlertError, setShowAlertError] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
+  
   const [nft, setNFT] = useState({})
   const [marketplace, setMarketplace] = useState({})
 
   async function Connect(){
-    var newAccount = null;
     if(window.ethereum){
+       setIsLoading(true);
        await window.ethereum.send('eth_requestAccounts');
        window.web3 = new Web3(window.ethereum);
        
        var web3 = new Web3(window.ethereum);
        var accounts = await web3.eth.getAccounts();
        setAccount(accounts[0]);
-       const textAccount = accounts[0];
-       
        const provider = new ethers.providers.Web3Provider(window.ethereum);
        const signer = provider.getSigner();
-
+       
        loadContracts(signer);
 
-       setIsConnected(true);
-       setTextButton( textAccount.slice(0, 6) + '...' + textAccount.slice(37, 42));
        setShowAlertSuccess(true);
+       setIsLoading(false);
     }
     else{
-        setIsConnected(false);
+        setIsLoading(true);
         setAccount('');
-        setTextButton("Connect Wallet"); 
         setShowAlertError(true);
-        
+        setIsLoading(false);
     }
 };
 
@@ -65,13 +61,13 @@ const loadContracts = async (signer) => {
     <div className="App">
       <BrowserRouter basename='/dev/danur'>
         <>
-          <Navbar textButton={textButton} showAlertSuccess={showAlertSuccess} setShowAlertSuccess={setShowAlertSuccess} showAlertError={showAlertError} setShowAlertError={setShowAlertError} Connect={Connect}/>
+          <Navbar isLoading={isLoading} account={account} showAlertSuccess={showAlertSuccess} setShowAlertSuccess={setShowAlertSuccess} showAlertError={showAlertError} setShowAlertError={setShowAlertError} Connect={Connect}/>
         </>
         <Routes>
           <Route path="/" element={<LandingPage account={account} nft={nft} marketplace={marketplace}/>} />
           <Route path="/home" element={<LandingPage account={account} nft={nft} marketplace={marketplace}/>}/>
-          <Route path="/manage" element={<Manager account={account} nft={nft} marketplace={marketplace}/>} />
-          <Route path="/my-purchases" element={<MyPurchases account={account}/>} />
+          <Route path="/manage" element={<Manager isLoading={isLoading} account={account} nft={nft} marketplace={marketplace}/>} />
+          <Route path="/my-purchases" element={<MyPurchases isLoading={isLoading} account={account} nft={nft} marketplace={marketplace}/>} />
         </Routes>
       </BrowserRouter>
     </div>
