@@ -4,6 +4,7 @@ module.exports = {
     "./src/frontend/components/Navbar.jsx",
     "./src/frontend/components/Home.jsx",
     "./src/frontend/components/Landing.jsx",
+    "./src/frontend/components/Loading.jsx",
     "./src/frontend/components/Modal.jsx",
     "./src/frontend/components/Footer.jsx",
     "./src/frontend/components/Manager.jsx",
