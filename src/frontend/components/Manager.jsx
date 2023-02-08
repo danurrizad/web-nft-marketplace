@@ -20,9 +20,9 @@ const Manager = ({isLoading, account, nft, marketplace}) => {
   return (
     <>
         <div className='bg-slate-300 min-h-screen'>
-            <div className='2xl:flex flex-none'>
+            <div className='flex'>
                 <MyListedNFT account={account} nft={nft} marketplace={marketplace}/>
-                <CreateAndList nft={nft} marketplace={marketplace}/>
+
             </div>
         </div>
     </>
