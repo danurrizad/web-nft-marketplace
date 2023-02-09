@@ -90,7 +90,7 @@ const CreateAndList = ({account, nft, marketplace, setShowCreate}) => {
         </div>
         <div>
           {showAlertError ? 
-          (<div className={"bg-red-200 shadow-xl shadow-red-800 border-t-red-800 border-t-4 2xl:py-5 xl:py-5 lg:py-5 py-2 px-6 mb-3 2xl:text-xl xl:text-xl text-sm text-red-700 inline-flex items-center absolute 2xl:w-[35vw] xl:w-[35vw] lg:w-[35vw] w-full"}
+          (<div className={"bg-red-200 z-50 fixed top-0 left-1/2 -translate-x-1/2 shadow-xl shadow-red-800 border-t-red-800 border-t-4 2xl:py-5 xl:py-5 lg:py-5 py-2 px-6 mb-3 2xl:text-xl xl:text-xl text-sm text-red-700 inline-flex items-center w-screen"}
                 >
               <strong className="mr-1">Error! </strong> Your NFT is failed to uploaded to IPFS.
               <button type="button" className={"box-content w-4 h-4 p-1 ml-auto text-red-900 border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:red-teal-900 hover:opacity-75 hover:no-underline mb-2"} onClick={()=>setShowAlertError(false)}>X</button>
