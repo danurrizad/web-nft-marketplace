@@ -4,7 +4,7 @@ import Home from './components/Home';
 import Manager from './components/Manager';
 import MyPurchases from './components/MyPurchases';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import ReactLoading from 'react-loading';
 
@@ -35,7 +35,6 @@ function App() {
        setAccount(accounts[0]);
        const provider = new ethers.providers.Web3Provider(window.ethereum);
        const signer = provider.getSigner();
-       
        loadContracts(signer);
 
        setShowAlertSuccess(true);
@@ -56,7 +55,10 @@ const loadContracts = async (signer) => {
   const mynft = new ethers.Contract(NFTAddress.address, NFTABI.abi, signer);
   setNFT(mynft);
 }
+
+
   
+
   return (
     <div className="App">
       <BrowserRouter basename='/dev/danur'>
@@ -64,7 +66,7 @@ const loadContracts = async (signer) => {
           <Navbar isLoading={isLoading} account={account} showAlertSuccess={showAlertSuccess} setShowAlertSuccess={setShowAlertSuccess} showAlertError={showAlertError} setShowAlertError={setShowAlertError} Connect={Connect}/>
         </>
         <Routes>
-          <Route path="/" element={<Home account={account} nft={nft} marketplace={marketplace}/>} />
+          <Route path="/" element={<Home account={account} nft={nft} marketplace={marketplace} setNFT={setNFT} setMarketplace={setMarketplace}/>} />
           <Route path="/manage" element={<Manager isLoading={isLoading} account={account} nft={nft} marketplace={marketplace}/>} />
           <Route path="/my-purchases" element={<MyPurchases isLoading={isLoading} account={account} nft={nft} marketplace={marketplace}/>} />
         </Routes>
