@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { ethers } from 'ethers'
 
 import Loading from './Loading';
+import Footer from './Footer'
 
 
 const MyPurchases = ({account, isLoading, nft, marketplace}) => {
@@ -37,15 +38,21 @@ const MyPurchases = ({account, isLoading, nft, marketplace}) => {
     }, [])
 
     if(isLoading) return (
-        <div className='bg-slate-300 min-h-screen'>
-            <h1 className='flex justify-center items-center flex-col p-8 2xl:text-[50px] xl:text-[50px] lg:text-[50px] text-[20px] text-center'>Connecting...</h1>
+        <div>
+            <div className='bg-slate-300 min-h-screen'>
+                <h1 className='flex justify-center items-center flex-col p-8 2xl:text-[50px] xl:text-[50px] lg:text-[50px] text-[20px] text-center'>Connecting...</h1>
+            </div>
+            <Footer/>
         </div>
       )
 
     if (!account) return (
-        <main className='bg-slate-300 min-h-screen'>
-          <h1 className='flex justify-center items-center flex-col p-8 2xl:text-[50px] xl:text-[50px] lg:text-[50px] text-[20px] text-center '>Please connect your wallet to see your purchases...</h1>
-        </main>
+        <div>
+            <main className='bg-slate-300 min-h-screen'>
+              <h1 className='flex justify-center items-center flex-col p-8 2xl:text-[50px] xl:text-[50px] lg:text-[50px] text-[20px] text-center '>Please connect your wallet to see your purchases...</h1>
+            </main>
+            <Footer/>
+        </div>
       )
   return (
     <div>
@@ -55,15 +62,16 @@ const MyPurchases = ({account, isLoading, nft, marketplace}) => {
             </div>
             {isLoadingItems ? (<Loading textLoading='Loading items...'/>) : (
                 <div>
-                <div className='justify-center flex-1 gap-y-10 2xl:flex 2xl:justify-center 2xl:gap-0 2xl:p-8 px-2'>
+                <div className='justify-center flex gap-y-10 gap-10 2xl:p-8 px-2'>
                     {purchases.length > 0 ? (
-                    <div className="px-5 container">
-                        <div className="g-4 py-5">
+                    <div className="px-5 container flex">
+                        <div className="g-4 py-5 flex flex-wrap gap-10">
                             {purchases.map((item, index) => (
                             <div key={index} className="overflow-hidden">
                                 <div className='shadow-xl shadow-slate-600 bg-slate-700 border-solid border-2 border-b-0 border-black w-[150px] 2xl:w-[300px] xl:w-[300px] lg:w-[300px] md:w-[300px] sm:w-[250px] min-w-[150px]'>
+                                    <h1 className='text-center 2xl:text-[20px] xl:text-[20px] lg:text-[20px] md:text-[15px] sm:text-[15px] text-[15px] bg-slate-700 text-white p-1'>{item.name}</h1>
                                     <img variant="top" src={item.image} alt={"item-"+index} className=''/>
-                                    <div className='text-center text-[12px] 2xl:text-[20px] xl:text-[20px] lg:text-[20px] md:text-[20px] sm:text-[12px] p-4 text-white'>
+                                    <div className='text-center 2xl:text-[23px] xl:text-[23px] lg:text-[23px] md:text-[12px] sm:text-[12px] text-[12px] p-4 text-white'>
                                         <div>Purchased for {ethers.utils.formatEther(item.totalPrice)} ETH</div>
                                     </div>
                                 </div>
@@ -79,8 +87,8 @@ const MyPurchases = ({account, isLoading, nft, marketplace}) => {
                 </div>
                 </div>
             )}
-            
         </div>
+        <Footer/>
     </div>
   )
 }
