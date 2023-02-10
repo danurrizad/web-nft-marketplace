@@ -60,7 +60,7 @@ const loadContracts = async (signer) => {
 
   return (
     <div className="App">
-      <HashRouter>
+      <HashRouter basename='/'>
         <>
           <Navbar isLoading={isLoading} account={account} showAlertSuccess={showAlertSuccess} setShowAlertSuccess={setShowAlertSuccess} showAlertError={showAlertError} setShowAlertError={setShowAlertError} Connect={Connect}/>
         </>
