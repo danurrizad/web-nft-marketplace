@@ -4,9 +4,8 @@ import Home from './components/Home';
 import Manager from './components/Manager';
 import MyPurchases from './components/MyPurchases';
 
-import { useState, useEffect } from 'react';
-import {BrowserRouter, Routes, Route} from 'react-router-dom'
-import ReactLoading from 'react-loading';
+import { useState, } from 'react';
+import {HashRouter, Routes, Route} from 'react-router-dom'
 
 import Web3 from 'web3';
 import { ethers } from 'ethers';
@@ -61,7 +60,7 @@ const loadContracts = async (signer) => {
 
   return (
     <div className="App">
-      <BrowserRouter basename='/dev/danur'>
+      <HashRouter>
         <>
           <Navbar isLoading={isLoading} account={account} showAlertSuccess={showAlertSuccess} setShowAlertSuccess={setShowAlertSuccess} showAlertError={showAlertError} setShowAlertError={setShowAlertError} Connect={Connect}/>
         </>
@@ -70,7 +69,7 @@ const loadContracts = async (signer) => {
           <Route path="/manage" element={<Manager isLoading={isLoading} account={account} nft={nft} marketplace={marketplace}/>} />
           <Route path="/my-purchases" element={<MyPurchases isLoading={isLoading} account={account} nft={nft} marketplace={marketplace}/>} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </div>
   );
 }

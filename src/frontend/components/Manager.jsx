@@ -1,7 +1,5 @@
-import React, {useState, useEffect} from 'react'
-import { ethers } from 'ethers'
+import React from 'react'
 import MyListedNFT from './MyListedNFT'
-import CreateAndList from './CreateAndList'
 import Footer from './Footer'
 
 const Manager = ({isLoading, account, nft, marketplace}) => {

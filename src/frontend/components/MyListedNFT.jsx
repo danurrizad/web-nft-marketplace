@@ -87,7 +87,7 @@ const MyListedNFT = ({account, nft, marketplace}) => {
                               {listedItems.map((item,index) => (
                                   <div key={index} className='shadow-xl shadow-slate-600 bg-slate-700 border-solid border-2 border-b-0 border-black w-[150px] 2xl:w-[300px] xl:w-[300px] lg:w-[300px] min-w-[150px] h-fit '>
                                       <h1 className='text-center 2xl:text-[20px] xl:text-[20px] lg:text-[20px] md:text-[15px] sm:text-[15px] text-[15px] bg-slate-700 text-white p-1'>{item.name}</h1>
-                                      <div className='p-0'><img src={item.image}/></div>
+                                      <div className='p-0'><img src={item.image} alt={"item-nft-"+index}/></div>
                                       <div className=' bg-slate-700 p-4 border-y-4 border-black flex justify-center text-white 2xl:text-[23px] xl:text-[23px] lg:text-[23px] md:text-[12px] sm:text-[12px] text-[12px]'>
                                         <h2>Listed for <span>{ethers.utils.formatEther(item.totalPrice)}</span> ETH</h2>
                                       </div>

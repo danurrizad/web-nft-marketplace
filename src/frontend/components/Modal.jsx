@@ -1,7 +1,6 @@
-import React, {useState} from 'react'
+import React from 'react'
 
 const Modal = ({onDialog, msg, itemName, itemImage}) => {
-  
 
   return (
     <>
@@ -20,7 +19,7 @@ const Modal = ({onDialog, msg, itemName, itemImage}) => {
                 {/*body*/}
                 <div className="relative p-6 flex-auto bg-slate-100">
                   <div className='w-[300px] border-2 border-slate-900'>
-                    <img src={itemImage} />
+                    <img src={itemImage} alt="item-nft"/>
                   </div>
                   <p className="text-center my-4 text-slate-500 text-lg leading-relaxed">
                     {msg}

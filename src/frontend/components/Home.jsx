@@ -1,16 +1,8 @@
 import React, {useState, useEffect, useRef} from 'react';
 import Footer from './Footer';
-import Navbar from './Navbar';
 import { ethers } from 'ethers';
-import ReactLoading from 'react-loading';
 import LandingPage from './Landing.jsx'
-import Loading from './Loading';
 import Modal from './Modal';
-
-import MarketplaceAddress from '../contractsData/Marketplace-address.json';
-import MarketplaceABI from '../contractsData/Marketplace.json';
-import NFTAddress from '../contractsData/ERC721NFT-address.json';
-import NFTABI from '../contractsData/ERC721NFT.json';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -19,7 +11,6 @@ import 'react-toastify/dist/ReactToastify.css';
 const Home = ({account, nft, marketplace, setNFT, setMarketplace}) => {
     
     const [items, setItems] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
     const idItemRef = useRef();
     const totalPriceRef = useRef();
     const [showModal, setShowModal] = useState({
@@ -59,7 +50,6 @@ const Home = ({account, nft, marketplace, setNFT, setMarketplace}) => {
 
     const loadMarketplaceItems = async () => {
         if(account){
-            setIsLoading(true);
             const itemCount = await marketplace.itemCount();                 // Load all unsold items
             console.log(itemCount);
             let items = []
@@ -82,7 +72,6 @@ const Home = ({account, nft, marketplace, setNFT, setMarketplace}) => {
                 }
             }
             setItems(items);
-            setIsLoading(false);
         }
     }
 
