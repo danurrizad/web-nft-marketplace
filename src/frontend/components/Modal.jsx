@@ -2,14 +2,15 @@ import React from 'react'
 
 const Modal = ({onDialog, msg, itemName, itemImage}) => {
 
+
   return (
     <>
-          <div
+          <div id="modal"
             className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
           >
             <div className="relative w-auto my-6 mx-auto max-w-3xl">
               {/*content*/}
-              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-slate-100 outline-none focus:outline-none">
+              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-slate-300 outline-none focus:outline-none">
                 {/*header*/}
                 <div className="flex items-center justify-center p-5 border-b border-solid border-slate-900 rounded-t">
                   <h3 className="text-center text-3xl font-semibold">
@@ -17,7 +18,7 @@ const Modal = ({onDialog, msg, itemName, itemImage}) => {
                   </h3>
                 </div>
                 {/*body*/}
-                <div className="relative p-6 flex-auto bg-slate-100">
+                <div className="relative p-6 flex-auto bg-slate-200">
                   <div className='w-[300px] border-2 border-slate-900'>
                     <img src={itemImage} alt="item-nft"/>
                   </div>
@@ -28,7 +29,7 @@ const Modal = ({onDialog, msg, itemName, itemImage}) => {
                 {/*footer*/}
                 <div className="flex items-center justify-center p-6 border-t border-solid border-slate-900 rounded-b">
                   <button
-                    className="text-red-500 background-transparent font-bold uppercase px-6 py-3 rounded-lg text-sm outline-none focus:outline-none mr-1 mb-1 ease-in-out transition-all duration-150 hover:bg-red-500 hover:text-white "
+                    className="text-red-500 background-transparent font-bold uppercase px-6 py-3 rounded-md text-sm outline-none focus:outline-none mr-1 mb-1 ease-in-out transition-all duration-150 hover:bg-red-500 hover:text-white "
                     type="button"
                     onClick={() => onDialog(false)}
                   >

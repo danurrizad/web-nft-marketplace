@@ -102,10 +102,10 @@ const CreateAndList = ({account, nft, marketplace, setShowCreate}) => {
             <div className='border-2 bg-slate-500 mt-8 h-[92vh] z-40 fixed top-0 left-1/2 -translate-x-1/2 duration-1000 transition-all rounded-2xl w-11/12 2xl:w-fit xl:w-fit lg:w-fit md:w-fit sm:w-5/6'>
               <div id="listNFT" className='w-full '>
                   <div className='flex justify-end p-4 text-[30px]'>
-                    <button onClick={()=>setShowCreate(false)} className="text-slate-900 hover:text-slate-400 duration-200 fixed">X</button>
+                    <button onClick={()=>setShowCreate(false)} className="text-slate-900 hover:text-slate-400 duration-200 fixed border-2 px-3 hover:bg-slate-900">X</button>
                   </div>
                   <div className=' px-10'>
-                      <h1 className='2xl:text-[70px] xl:text-[70px] lg:text-[70px] text-[45px]'>Create and List</h1>
+                      <h1 className='pt-4 2xl:text-[70px] xl:text-[70px] lg:text-[70px] text-[45px]'>Create and List</h1>
                       <h1 className='2xl:text-[50px] xl:text-[50px] lg:text-[50px] text-[30px]'>Your Own NFT</h1>
                   </div>
                   <div className='px-8'>
