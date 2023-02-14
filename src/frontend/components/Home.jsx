@@ -5,15 +5,13 @@ import LandingPage from './Landing.jsx'
 import Modal from './Modal';
 import Loading from './Loading';
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
-
 const Home = ({account, nft, marketplace}) => {
     const [isLoading, setIsLoading] = useState(false);
     const [items, setItems] = useState([]);
     const idItemRef = useRef();
     const totalPriceRef = useRef();
+    const [showAlertSuccess, setShowAlertSuccess] = useState(false);
+    const [showAlertError, setShowAlertError] = useState(false);
     const [showModal, setShowModal] = useState({
         title:"",
         img:"",
@@ -53,13 +51,11 @@ const Home = ({account, nft, marketplace}) => {
         if(account){
             setIsLoading(true);
             const itemCount = await marketplace.itemCount();                 // Load all unsold items
-            console.log(itemCount);
             let items = []
             for (let i = 1; i <= itemCount; i++) {
                 const item = await marketplace.items(i)
                 if (!item.sold) {                                       
                     const uri = await nft.tokenURI(item.tokenId)                // get uri url from nft contract
-                    console.log(uri)
                     const response = await fetch(uri)                           // use uri to fetch the nft metadata stored on ipfs 
                     const metadata = await response.json()
                     const totalPrice = await marketplace.getTotalPrice(item.itemId)     // get total price of item (item price + fee)
@@ -81,29 +77,11 @@ const Home = ({account, nft, marketplace}) => {
     const buyItems = async (itemId, totalPrice) => {
         try{
             await (await marketplace.purchaseItem(itemId, { value: totalPrice })).wait()
-            toast.success('Successed', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                });   
+            setShowAlertSuccess(true);
         }
         catch(error){
             console.log('Ether not enough to send')
-            toast.error("You don't have enough ETH to buy this NFT", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                });
+            setShowAlertError(true);
         }
         loadMarketplaceItems()
       }
@@ -128,7 +106,7 @@ const Home = ({account, nft, marketplace}) => {
             <Footer/>
         </>
     )
-
+        
     if(isLoading) return(
         <>
             <LandingPage/>
@@ -167,7 +145,7 @@ const Home = ({account, nft, marketplace}) => {
                 <div className='flex justify-center '>
                     {items.length > 0 ? (
                         <div className='flex justify-center'>
-                            <div className='justify-center flex flex-wrap gap-y-10 gap-x-10 2xl:p-8 py-10 px-2'>
+                            <div className='justify-center flex flex-wrap  gap-y-10 gap-x-10 2xl:p-8 py-10 px-8'>
                                 {items.map((item,index) => (
                                     <div key={index} className='rounded-xl shadow-xl shadow-slate-800 bg-slate-100 border-solid border-2 border-b-0 border-black w-[150px] 2xl:w-[300px] xl:w-[300px] h-fit'> 
                                         <h1 className='rounded-t-lg text-center 2xl:text-[20px] text-[15px] bg-slate-800 text-white p-1'>{item.name}</h1>
@@ -185,11 +163,24 @@ const Home = ({account, nft, marketplace}) => {
                                         </div>
                                     </div>
                                 ))}
-
-                                {showModal.isRunning && <Modal onDialog={confirmBuy} msg={showModal.msg} itemName={showModal.title} itemImage={showModal.img}/>}
-                                {/*{showModal ? <Modal onConfirm={confirmBuy}/> : null}*/}
-                                <ToastContainer />
                             </div>
+                                {showModal.isRunning && <Modal onDialog={confirmBuy} msg={showModal.msg} itemName={showModal.title} itemImage={showModal.img}/>}
+                                <div>
+                                    {showAlertSuccess ? 
+                                    (<div className={"z-50 fixed top-0 left-1/2 -translate-x-1/2 bg-teal-200 shadow-xl shadow-teal-800 border-t-teal-800 border-t-4 2xl:py-5 xl:py-5 lg:py-5 py-2 px-6 mb-3 2xl:text-xl xl:text-xl text-sm text-teal-700 inline-flex items-center w-full"}
+                                        >
+                                        <strong className="mr-1">Successed! </strong> Your purchase was successful.
+                                        <button type="button" className={"box-content w-4 h-4 p-1 ml-auto text-teal-900 border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-teal-900 hover:opacity-75 hover:no-underline mb-2"} onClick={()=>setShowAlertSuccess(false)}>X</button>
+                                    </div>) : null}
+                                </div>
+                                <div>
+                                    {showAlertError ? 
+                                    (<div className={"z-50 fixed top-0 left-1/2 -translate-x-1/2 bg-red-300 shadow-xl shadow-red-800 border-t-red-800 border-t-4  2xl:py-5 xl:py-5 lg:py-5 py-2 px-6 mb-3 2xl:text-xl xl:text-xl text-sm text-red-700 inline-flex items-center w-full"}
+                                        >
+                                        <strong className="mr-1">Failed! </strong> You dont have enough ETH to buy this item.
+                                        <button type="button" className={"box-content w-4 h-4 p-1 ml-auto text-red-900 border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-red-900 hover:opacity-75 hover:no-underline mb-2"} onClick={()=>setShowAlertError(false)}>X</button>
+                                    </div>) : null}
+                                </div>
                         </div>
                     ):(
                         <main className='py-8 text-center px-4'>
@@ -199,6 +190,7 @@ const Home = ({account, nft, marketplace}) => {
                     )}
                 </div>
             </section>
+            
         </div>
         <Footer/>
     </div>
