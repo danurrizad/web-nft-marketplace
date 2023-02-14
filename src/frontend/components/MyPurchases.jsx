@@ -75,8 +75,8 @@ const MyPurchases = ({account, isLoading, nft, marketplace}) => {
             <div>
             <div className='justify-center flex gap-y-10 gap-10 2xl:p-8 px-2'>
                 {purchases.length > 0 ? (
-                <div className="px-5 container flex">
-                    <div className="g-4 py-5 flex flex-wrap gap-10">
+                <div className="px-5 container justify-center flex">
+                    <div className="g-4 py-5 flex flex-wrap justify-center gap-10 px-8">
                         {purchases.map((item, index) => (
                         <div key={index} className="overflow-hidden">
                             <div className='rounded-xl shadow-xl shadow-slate-600 bg-black border-solid border-2 border-b-0 border-black w-[150px] 2xl:w-[300px] xl:w-[300px] lg:w-[300px] md:w-[300px] sm:w-[250px] min-w-[150px]'>

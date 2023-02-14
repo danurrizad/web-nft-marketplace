@@ -11,7 +11,7 @@ contract Marketplace is ReentrancyGuard {
 
     // Variables
     address payable public immutable feeAccount; // the account that receives fees
-    uint public immutable feePercent; // the fee percentage on sales 
+    uint public feePercent; // the fee percentage on sales 
     uint public itemCount; 
 
     struct Item {
@@ -42,9 +42,8 @@ contract Marketplace is ReentrancyGuard {
         address indexed buyer
     );
 
-    constructor(uint _feePercent) {
+    constructor() {
         feeAccount = payable(msg.sender);
-        feePercent = _feePercent;
     }
 
     // Make item to offer on the marketplace
@@ -71,6 +70,10 @@ contract Marketplace is ReentrancyGuard {
             _price,
             msg.sender
         );
+    }
+
+    function setRoyaltyFee(uint _newRoyaltyFee) public {
+        feePercent = _newRoyaltyFee;
     }
 
     function purchaseItem(uint _itemId) external payable nonReentrant {

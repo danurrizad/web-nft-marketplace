@@ -9,6 +9,7 @@ const CreateAndList = ({account, nft, marketplace, setShowCreate}) => {
     const [price, setPrice] = useState(null);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [royalty, setRoyalty] = useState('')
     const [showAlertSuccess, setShowAlertSuccess] = useState(false);
     const [showAlertError, setShowAlertError] = useState(false);
     const [msg, setMsg] = useState('');
@@ -48,7 +49,7 @@ const CreateAndList = ({account, nft, marketplace, setShowCreate}) => {
         if (!image || !price || !name || !description) return
         try{
           setMsg('Listing NFT...')
-          const result = await client.add(JSON.stringify({image, price, name, description}))
+          const result = await client.add(JSON.stringify({image, price, name, description}))    
           mintAndList(result)
         } catch(error) {
           console.log("ipfs uri upload error: ", error)
@@ -63,6 +64,8 @@ const CreateAndList = ({account, nft, marketplace, setShowCreate}) => {
           await(await nft.mint(uri)).wait()           // mint nft 
           const id = await nft.tokenCount()           // get tokenId of new nft 
           await(await nft.setApprovalForAll(marketplace.address, true)).wait()            // approve marketplace to spend nft
+          //const setNewRoyaltyFee = await marketplace.setRoyaltyFee(royalty);  
+          await(await marketplace.setRoyaltyFee(royalty)).wait()
           const listingPrice = ethers.utils.parseEther(price.toString())                  // add nft to marketplace
           await(await marketplace.makeItem(nft.address, id, listingPrice)).wait()
           setShowAlertSuccess(true)
@@ -105,8 +108,8 @@ const CreateAndList = ({account, nft, marketplace, setShowCreate}) => {
                     <button onClick={()=>setShowCreate(false)} className="text-slate-900 hover:text-slate-400 duration-200 fixed border-2 px-3 hover:bg-slate-900">X</button>
                   </div>
                   <div className=' px-10'>
-                      <h1 className='pt-4 2xl:text-[70px] xl:text-[70px] lg:text-[70px] text-[45px]'>Create and List</h1>
-                      <h1 className='2xl:text-[50px] xl:text-[50px] lg:text-[50px] text-[30px]'>Your Own NFT</h1>
+                      <h1 className='pt-4 2xl:text-[65px] xl:text-[65px] lg:text-[65px] text-[45px]'>Create and List</h1>
+                      <h1 className='2xl:text-[45px] xl:text-[45px] lg:text-[45px] text-[30px]'>Your Own NFT</h1>
                   </div>
                   <div className='px-8'>
                       <section id="form" className='bg-white shadow-lg shadow-black rounded-xl py-4 my-10 overflow-y-auto space-y-0  max-h-[60vh] '>
@@ -145,9 +148,9 @@ const CreateAndList = ({account, nft, marketplace, setShowCreate}) => {
                               <label className="block uppercase tracking-wide text-gray-700 text-lg font-bold mb-2" for="price">PRICE (ETH)</label>
                               <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-slate-800 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="price" type="text" placeholder="Example : 0.5" required onChange={(e) => setPrice(e.target.value)}></input>
                           </div>
-                          <div className='2xl:w-full hidden'>
+                          <div className='2xl:w-full'>
                               <label className="block uppercase tracking-wide text-gray-700 text-lg font-bold mb-2" for="description">ROYALTY (%)</label>
-                              <input className="appearance-none block w-full bg-slate-200 text-gray-700 border border-slate-800 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="royalty" type="text" placeholder="Percentage of price you'll get" onChange=''></input>
+                              <input className="appearance-none block w-full bg-slate-200 text-gray-700 border border-slate-800 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="royalty" type="text" placeholder="Royalty usually is on 1-10" required onChange={(e) => setRoyalty(e.target.value)}></input>
                           </div>
                           <div className='flex justify-between'>
                             <button className="block uppercase tracking-wide text-white text-xs 2xl:text-lg font-bold mb-2 mt-8 bg-slate-800  px-2 2xl:px-4 py-2 rounded-3xl hover:bg-white hover:text-slate-800 hover:border-slate-800 border-2 duration-200" 

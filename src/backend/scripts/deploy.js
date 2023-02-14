@@ -10,7 +10,7 @@ async function main() {
   const Marketplace = await ethers.getContractFactory("Marketplace");
 
   // deploy contracts
-  const marketplace = await Marketplace.deploy(10);
+  const marketplace = await Marketplace.deploy();
   const nft = await NFT.deploy();
 
   // Save copies of each contracts abi and address to the frontend.
