@@ -7,12 +7,11 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 import "hardhat/console.sol";
 
-contract Marketplace is ReentrancyGuard {
+contract Marketplace is ReentrancyGuard{
 
-    // Variables
     address payable public immutable feeAccount; // the account that receives fees
     uint public feePercent; // the fee percentage on sales 
-    uint public itemCount; 
+    uint public itemCount;
 
     struct Item {
         uint itemId;
@@ -25,6 +24,13 @@ contract Marketplace is ReentrancyGuard {
 
     // itemId -> Item
     mapping(uint => Item) public items;
+
+    struct Royalty {
+        uint feePercent;
+    }
+
+    // itemId -> Royalty
+    mapping(uint => Royalty) public royalties;
 
     event Offered(
         uint itemId,
@@ -47,7 +53,7 @@ contract Marketplace is ReentrancyGuard {
     }
 
     // Make item to offer on the marketplace
-    function makeItem(IERC721 _nft, uint _tokenId, uint _price) external nonReentrant {
+    function makeItem(IERC721 _nft, uint _tokenId, uint _price, uint _feePercent) external nonReentrant {
         require(_price > 0, "Price must not be zero");
         // increment itemCount
         itemCount ++;
@@ -62,6 +68,10 @@ contract Marketplace is ReentrancyGuard {
             payable(msg.sender),
             false
         );
+        //add fee percent for item
+        royalties[itemCount] = Royalty (_feePercent);
+        
+        
         // emit Offered event
         emit Offered(
             itemCount,
@@ -99,7 +109,8 @@ contract Marketplace is ReentrancyGuard {
             msg.sender
         );
     }
+
     function getTotalPrice(uint _itemId) view public returns(uint){
-        return((items[_itemId].price*(100 + feePercent))/100);
+        return((items[_itemId].price*(100 + royalties[_itemId].feePercent))/100);
     }
 }
