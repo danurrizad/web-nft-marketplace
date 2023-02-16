@@ -7,11 +7,13 @@ import Loading from './Loading';
 
 const Home = ({account, nft, marketplace}) => {
     const [isLoading, setIsLoading] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
     const [items, setItems] = useState([]);
     const idItemRef = useRef();
     const totalPriceRef = useRef();
     const [showAlertSuccess, setShowAlertSuccess] = useState(false);
     const [showAlertError, setShowAlertError] = useState(false);
+    const [errMsg, setErrMsg] = useState('')
     const [showModal, setShowModal] = useState({
         title:"",
         img:"",
@@ -76,12 +78,22 @@ const Home = ({account, nft, marketplace}) => {
 
     const buyItems = async (itemId, totalPrice) => {
         try{
-            await (await marketplace.purchaseItem(itemId, { value: totalPrice })).wait()
-            setShowAlertSuccess(true);
+            setIsProcessing(true)
+            await (await marketplace.purchaseItem(itemId, { value: totalPrice })).wait();
+            setIsProcessing(false)
+            setShowAlertSuccess(true, "Your purchase was successful.");
         }
         catch(error){
-            console.log('Ether not enough to send')
-            setShowAlertError(true);
+            setIsProcessing(true)
+            if(error.code === 4001){
+                setShowAlertError(true);
+                setErrMsg('Transaction cancelled.');
+            }
+            else{
+                setShowAlertError(true);
+                setErrMsg("You don't have enough ETH to buy this item");
+            }
+            setIsProcessing(false)
         }
         loadMarketplaceItems()
       }
@@ -106,7 +118,7 @@ const Home = ({account, nft, marketplace}) => {
             <Footer/>
         </>
     )
-        
+    
     if(isLoading) return(
         <>
             <LandingPage/>
@@ -120,6 +132,8 @@ const Home = ({account, nft, marketplace}) => {
             <Footer/>
         </>
     )
+    
+    
 
     return (
     <div>
@@ -165,21 +179,28 @@ const Home = ({account, nft, marketplace}) => {
                                 ))}
                             </div>
                                 {showModal.isRunning && <Modal onDialog={confirmBuy} msg={showModal.msg} itemName={showModal.title} itemImage={showModal.img}/>}
+                                {isProcessing ? (
+                                    <div className='fixed z-50 top-0 min-h-screen bg-white bg-opacity-30 max-w-screen w-screen'>
+                                        <div className='flex items-center justify-center flex-col min-h-screen font-bold'>
+                                            <Loading textLoading="Processing..."/>
+                                        </div>
+                                    </div>
+                                ):(null)}
                                 <div>
-                                    {showAlertSuccess ? 
+                                    {showAlertSuccess ?
                                     (<div className={"z-50 fixed top-0 left-1/2 -translate-x-1/2 bg-teal-200 shadow-xl shadow-teal-800 border-t-teal-800 border-t-4 2xl:py-5 xl:py-5 lg:py-5 py-2 px-6 mb-3 2xl:text-xl xl:text-xl text-sm text-teal-700 inline-flex items-center w-full"}
                                         >
-                                        <strong className="mr-1">Successed! </strong> Your purchase was successful.
+                                        <strong className="mr-1">Successed! </strong> Your purchase was successful
                                         <button type="button" className={"box-content w-4 h-4 p-1 ml-auto text-teal-900 border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-teal-900 hover:opacity-75 hover:no-underline mb-2"} onClick={()=>setShowAlertSuccess(false)}>X</button>
-                                    </div>) : null}
+                                    </div>) : (null)}
                                 </div>
                                 <div>
                                     {showAlertError ? 
                                     (<div className={"z-50 fixed top-0 left-1/2 -translate-x-1/2 bg-red-300 shadow-xl shadow-red-800 border-t-red-800 border-t-4  2xl:py-5 xl:py-5 lg:py-5 py-2 px-6 mb-3 2xl:text-xl xl:text-xl text-sm text-red-700 inline-flex items-center w-full"}
                                         >
-                                        <strong className="mr-1">Failed! </strong> You dont have enough ETH to buy this item.
+                                        <strong className="mr-1">Failed! </strong> {errMsg}
                                         <button type="button" className={"box-content w-4 h-4 p-1 ml-auto text-red-900 border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-red-900 hover:opacity-75 hover:no-underline mb-2"} onClick={()=>setShowAlertError(false)}>X</button>
-                                    </div>) : null}
+                                    </div>) : (null)}
                                 </div>
                         </div>
                     ):(
@@ -192,9 +213,11 @@ const Home = ({account, nft, marketplace}) => {
             </section>
             
         </div>
-        <Footer/>
+        <div className='pt-20 bg-slate-300'>
+            <Footer/>
+        </div>
     </div>
   )
 }
 
-export default Home
+export default Home;
