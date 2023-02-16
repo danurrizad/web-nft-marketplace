@@ -27,7 +27,7 @@ function App() {
     if(window.ethereum){
        setIsLoading(true);
        await window.ethereum.send('eth_requestAccounts');
-       window.web3 = new Web3(window.ethereum);
+       //window.web3 = new Web3(window.ethereum);
        
        var web3 = new Web3(window.ethereum);
        var accounts = await web3.eth.getAccounts();
