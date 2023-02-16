@@ -67,7 +67,7 @@ const CreateAndList = ({account, nft, marketplace, setShowCreate}) => {
           //const setNewRoyaltyFee = await marketplace.setRoyaltyFee(royalty);  
           await(await marketplace.setRoyaltyFee(royalty)).wait()
           const listingPrice = ethers.utils.parseEther(price.toString())                  // add nft to marketplace
-          await(await marketplace.makeItem(nft.address, id, listingPrice)).wait()
+          await(await marketplace.makeItem(nft.address, id, listingPrice, royalty)).wait()
           setShowAlertSuccess(true)
           setMsg('')
           console.log('NFT is successfully minted')
@@ -87,7 +87,7 @@ const CreateAndList = ({account, nft, marketplace, setShowCreate}) => {
           {showAlertSuccess ? 
               (<div className={"bg-teal-200 z-50 fixed top-0 left-1/2 -translate-x-1/2 shadow-xl shadow-teal-800 border-t-teal-800 border-t-4 2xl:py-5 xl:py-5 lg:py-5 py-2 px-6 2xl:text-xl xl:text-xl text-sm text-teal-700 inline-flex items-center w-screen"}
                    >
-                  <strong className="mr-1">Successed! </strong> Your NFT is successfully uploaded to IPFS.
+                  <strong className="mr-1">Successed! </strong> Your NFT is successfully uploaded to store.
                   <button type="button" className={"box-content w-4 h-4 p-1 ml-auto text-teal-900 border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-teal-900 hover:opacity-75 hover:no-underline mb-2"} onClick={()=>setShowAlertSuccess(false)}>X</button>
               </div>) : null}
         </div>
@@ -95,7 +95,7 @@ const CreateAndList = ({account, nft, marketplace, setShowCreate}) => {
           {showAlertError ? 
           (<div className={"bg-red-200 z-50 fixed top-0 left-1/2 -translate-x-1/2 shadow-xl shadow-red-800 border-t-red-800 border-t-4 2xl:py-5 xl:py-5 lg:py-5 py-2 px-6 mb-3 2xl:text-xl xl:text-xl text-sm text-red-700 inline-flex items-center w-screen"}
                 >
-              <strong className="mr-1">Error! </strong> Your NFT is failed to uploaded to IPFS.
+              <strong className="mr-1">Error! </strong> Your NFT is failed to uploaded to store.
               <button type="button" className={"box-content w-4 h-4 p-1 ml-auto text-red-900 border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:red-teal-900 hover:opacity-75 hover:no-underline mb-2"} onClick={()=>setShowAlertError(false)}>X</button>
           </div>) : null}
         </div>
