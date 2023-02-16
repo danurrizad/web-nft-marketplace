@@ -9,7 +9,7 @@ const MyPurchases = ({account, isLoading, nft, marketplace}) => {
     const [purchases, setPurchases] = useState([]);
     const [isLoadingItems, setIsLoadingItems] = useState(false);
 
-        const loadPurchasedItems = async () => {
+    const loadPurchasedItems = async () => {
         setIsLoadingItems(true)
         const filter =  marketplace.filters.Bought(null,null,null,null,null,account)            // Fetch purchased items from marketplace by quering Offered events with the buyer set as the user
         const results = await marketplace.queryFilter(filter)
@@ -39,7 +39,7 @@ const MyPurchases = ({account, isLoading, nft, marketplace}) => {
 
     if(isLoading) return (
         <div>
-            <div className='bg-slate-300 min-h-screen'>
+            <div className='bg-slate-300 min-h-screen py-20'>
                 <h1 className='flex justify-center items-center flex-col p-8 2xl:text-[50px] xl:text-[50px] lg:text-[50px] text-[20px] text-center'>Connecting...</h1>
             </div>
             <Footer/>
@@ -48,7 +48,7 @@ const MyPurchases = ({account, isLoading, nft, marketplace}) => {
 
     if (!account) return (
         <div>
-            <main className='bg-slate-300 min-h-screen'>
+            <main className='bg-slate-300 min-h-screen py-20'>
               <h1 className='flex justify-center items-center flex-col p-8 2xl:text-[50px] xl:text-[50px] lg:text-[50px] text-[20px] text-center '>Please connect your wallet to see your purchases...</h1>
             </main>
             <Footer/>
@@ -57,18 +57,19 @@ const MyPurchases = ({account, isLoading, nft, marketplace}) => {
 
     if(isLoadingItems) return (
         <>
-            <div className='bg-slate-300 min-h-screen'>
+            <div className='bg-slate-300 min-h-screen py-20'>
                 <div className='py-8 px-10'>
                     <h1 className='2xl:text-[70px] xl:text-[70px] lg:text-[70px] text-[45px] text-center'>My Purchases</h1>
                 </div>
                 <Loading textLoading='Loading items...'/>
             </div>
+            <Footer/>
         </>
     )
 
   return (
     <div>
-        <div className='bg-slate-300 min-h-screen'>
+        <div className='bg-slate-300 min-h-screen py-20'>
             <div className='py-8 px-10'>
                 <h1 className='2xl:text-[70px] xl:text-[70px] lg:text-[70px] text-[45px] text-center'>My Purchases</h1>
             </div>
