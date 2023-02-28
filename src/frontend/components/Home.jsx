@@ -11,6 +11,7 @@ const Home = ({account, nft, marketplace}) => {
     const [items, setItems] = useState([]);
     const idItemRef = useRef();
     const totalPriceRef = useRef();
+    const itemSellerRef = useRef();
     const [showAlertSuccess, setShowAlertSuccess] = useState(false);
     const [showAlertError, setShowAlertError] = useState(false);
     const [errMsg, setErrMsg] = useState('')
@@ -18,28 +19,33 @@ const Home = ({account, nft, marketplace}) => {
         title:"",
         img:"",
         msg:"",
-        isRunning:false
+        isRunning:false,
+        price:"",
+        owner:"",
     });
 
-    const handleModal = (title, img, msg, isRunning) => {
+    const handleModal = (title, img, msg, isRunning, price, owner) => {
         setShowModal({
             title,
             img,
             msg,
             isRunning,
+            price,
+            owner,
         })
     }
 
     const handleBuy = (items) => {
-        handleModal(items.name, items.image, "Are you sure want to buy this?", true);
+        handleModal(items.name, items.image, "Are you sure want to buy this?", true, items.totalPrice, items.seller);
         idItemRef.current = items.itemId;
-        totalPriceRef.current = items.totalPrice
+        totalPriceRef.current = items.totalPrice;
+        itemSellerRef.current = items.seller;
     }
 
     const confirmBuy = (yes) => {
         if(yes){
             try{
-                buyItems(idItemRef.current, totalPriceRef.current)
+                buyItems(idItemRef.current, totalPriceRef.current, itemSellerRef.current)
                 handleModal('',false)
             }
             catch(error){
@@ -76,24 +82,30 @@ const Home = ({account, nft, marketplace}) => {
         }
     }
 
-    const buyItems = async (itemId, totalPrice) => {
-        try{
-            setIsProcessing(true)
-            await (await marketplace.purchaseItem(itemId, { value: totalPrice })).wait();
-            setIsProcessing(false)
-            setShowAlertSuccess(true, "Your purchase was successful.");
+    const buyItems = async (itemId, totalPrice, itemSeller) => {
+        setIsProcessing(true)
+        if(account!=itemSeller){
+            try{
+                await (await marketplace.purchaseItem(itemId, { value: totalPrice })).wait();
+                setIsProcessing(false)
+                setShowAlertSuccess(true, "Your purchase was successful.");
+            }
+            catch(error){
+                if(error.code === 4001){
+                    setShowAlertError(true);
+                    setErrMsg('Transaction cancelled.');
+                }
+                else{
+                    setShowAlertError(true);
+                    setErrMsg("You don't have enough ETH to buy this item");
+                }
+                setIsProcessing(false)
+            }
         }
-        catch(error){
-            setIsProcessing(true)
-            if(error.code === 4001){
-                setShowAlertError(true);
-                setErrMsg('Transaction cancelled.');
-            }
-            else{
-                setShowAlertError(true);
-                setErrMsg("You don't have enough ETH to buy this item");
-            }
-            setIsProcessing(false)
+        else{
+            setShowAlertError(true);
+            setErrMsg("You can't buy your own listed NFT");
+            setIsProcessing(false);
         }
         loadMarketplaceItems()
       }
@@ -109,7 +121,7 @@ const Home = ({account, nft, marketplace}) => {
         <>
             <LandingPage/>
             <div className='min-h-screen bg-slate-300 max-w-screen'>
-                <h1 className='text-center text-[72px] pb-12'>Store</h1>
+                <h1 className='text-center text-[72px] pb-12 font-serif pt-8'>STORE</h1>
                     <div className='justify-center flex-1 text-center px-4 2xl:text-[30px] xl:text-[30px] lg:text-[30px] md:text-[30px] text-[15px]'>
                         <h1 className='pt-1 pb-20'>Wallet address :</h1>
                         <p>Please connect your wallet to access this store</p>
@@ -123,7 +135,7 @@ const Home = ({account, nft, marketplace}) => {
         <>
             <LandingPage/>
             <div className='min-h-screen bg-slate-300 max-w-screen'>
-                <h1 className='text-center text-[72px] pb-12'>Store</h1>
+                <h1 className='text-center text-[72px] pb-12 font-serif pt-8'>STORE</h1>
                     <div className='justify-center flex-1 text-center px-4 2xl:text-[30px] xl:text-[30px] lg:text-[30px] md:text-[30px] text-[15px]'>
                         <h1 className='pt-1 pb-20'>Wallet address :</h1>
                         <Loading textLoading="Loading items..."/>
@@ -144,7 +156,7 @@ const Home = ({account, nft, marketplace}) => {
         <div id='#store' className='min-h-screen bg-slate-300 max-w-screen'>
             <section id='header-content'>
                 <div>
-                    <h1 className='text-center text-[72px] pb-12'>Store</h1>
+                    <h1 className='text-center text-[72px] pb-12 font-serif pt-8'>STORE</h1>
                     <div className='justify-center flex-1 text-center px-4 2xl:text-[30px] xl:text-[30px] lg:text-[30px] md:text-[30px] text-[15px]'>
                         <h1 className='pt-1'>Wallet address :</h1>
                         {account ? (<div className='flex justify-center'><h1 className='bg-slate-100 px-4 py-1 rounded-full shadow-lg shadow-black'>{account}</h1></div>) : null}
@@ -161,27 +173,41 @@ const Home = ({account, nft, marketplace}) => {
                         <div className='flex justify-center'>
                             <div className='justify-center flex flex-wrap  gap-y-10 gap-x-10 2xl:p-8 py-10 px-8'>
                                 {items.map((item,index) => (
-                                    <div key={index} className='rounded-xl shadow-xl shadow-slate-800 bg-slate-100 border-solid border-2 border-b-0 border-black w-[150px] 2xl:w-[300px] xl:w-[300px] h-fit'> 
-                                        <h1 className='rounded-t-lg text-center 2xl:text-[20px] text-[15px] bg-slate-800 text-white p-1'>{item.name}</h1>
-                                        <img src={item.image} alt='NFT-1'/>
-                                        <div className='text-center 2xl:text-[20px] text-[10px]'>
-                                            <div className='border-t-2 border-black bg-slate-600'>
-                                                <p className='text-left px-4 text-slate-100'>{item.description}</p>
-                                            </div>
-                                            <div className='rounded-b-lg bg-slate-800 border-y-4 border-black p-4'>
-                                                <button className='transition ease-in-out duration-200 bg-emerald-300 hover:bg-emerald-500 2xl:py-1 xl:py-1 lg:py-1 md:py-1 sm:py-1 px-4 rounded-3xl  '
-                                                    onClick={()=>handleBuy(item)}
-                                                    >Buy ({ethers.utils.formatEther(item.totalPrice)} ETH)
-                                                </button>
+                                    <div className='2xl:w-1/4 xl:w-1/4 lg:w-1/4 md:w-1/4'>
+                                        <div key={index} className='rounded-xl shadow-xl shadow-slate-800 bg-slate-100 border-solid border-2 border-b-0 border-black w-fit h-fit'> 
+                                            <img src={item.image} alt='NFT-1' className='py-4 bg-slate-800 rounded-t-lg '/>
+                                            <h1 className='px-4 2xl:text-[25px] text-[30px]  bg-slate-800 text-slate-100 font-bold p-1'>{item.name}</h1>
+                                            <div className=' 2xl:text-[25px] '>
+                                                <div className=' bg-slate-800'>
+                                                    <p className='text-left px-4 text-[15px] text-slate-100 pb-4'>{item.description}</p>
+                                                </div>
+                                                <div className='text-[20px] rounded-b-lg bg-slate-900 border-y-4 border-black p-4 flex justify-between '>
+                                                    <div>
+                                                        <h2 className='text-slate-200'>Owner : <span><a href={"https://goerli.etherscan.io/address/"+item.seller} target="_blank" className='text-sky-600 hover:text-sky-700 hover:underline'>{item.seller.slice(0, 6) + '...' + item.seller.slice(39, 42)}</a></span></h2>
+                                                        <h2 className='text-slate-100  py-1'>Price : <span className='font-bold'>{ethers.utils.formatEther(item.totalPrice)} ETH</span></h2>
+                                                    </div>
+                                                    <div className='items-center flex'>
+                                                        <button className='flex transition ease-in-out duration-200 border-2 border-sky-600 bg-sky-400 hover:bg-sky-500  py-1 2xl:py-1 xl:py-1 lg:py-1 md:py-1 sm:py-1 2xl:px-10 px-10 rounded-3xl  '
+                                                            onClick={()=>handleBuy(item)}
+                                                            >Buy
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
+                                        {showModal.isRunning && <Modal onDialog={confirmBuy} msg={showModal.msg} itemName={showModal.title} itemImage={showModal.img} itemPrice={showModal.price} itemOwner={showModal.owner}/>}
+                                        {showAlertError ? (
+                                        <div className={"z-50 fixed top-0 left-1/2 -translate-x-1/2 bg-red-300 shadow-xl shadow-red-800 border-t-red-800 border-t-4  2xl:py-5 xl:py-5 lg:py-5 py-2 px-6 mb-3 2xl:text-xl xl:text-xl text-sm text-red-700 inline-flex items-center w-full"}>
+                                            <strong className="mr-1">Failed! </strong> {errMsg}
+                                            <button type="button" className={"box-content w-4 h-4 p-1 ml-auto text-red-900 border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-red-900 hover:opacity-75 hover:no-underline mb-2"} onClick={()=>setShowAlertError(false)}>X</button>
+                                        </div>):null}
                                     </div>
                                 ))}
                             </div>
-                                {showModal.isRunning && <Modal onDialog={confirmBuy} msg={showModal.msg} itemName={showModal.title} itemImage={showModal.img}/>}
+                                
                                 {isProcessing ? (
-                                    <div className='fixed z-50 top-0 min-h-screen bg-white bg-opacity-30 max-w-screen w-screen'>
-                                        <div className='flex items-center justify-center flex-col min-h-screen font-bold'>
+                                    <div className='fixed z-50 top-0 min-h-screen bg-slate-200 bg-opacity-30 max-w-screen w-screen'>
+                                        <div className='flex items-center justify-center flex-col min-h-screen font-medium animate-pulse font-serif'>
                                             <Loading textLoading="Processing..."/>
                                         </div>
                                     </div>
