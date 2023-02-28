@@ -20,6 +20,7 @@ contract Marketplace is ReentrancyGuard{
         uint price;
         address payable seller;
         bool sold;
+        bool resell;
     }
 
     // itemId -> Item
@@ -45,7 +46,8 @@ contract Marketplace is ReentrancyGuard{
         uint tokenId,
         uint price,
         address indexed seller,
-        address indexed buyer
+        address indexed buyer,
+        bool resell
     );
 
     constructor() {
@@ -53,7 +55,7 @@ contract Marketplace is ReentrancyGuard{
     }
 
     // Make item to offer on the marketplace
-    function makeItem(IERC721 _nft, uint _tokenId, uint _price, uint _feePercent) external nonReentrant {
+    function makeItem(IERC721 _nft, uint _tokenId, uint _price, uint _feePercent, bool _isResell) external nonReentrant {
         require(_price > 0, "Price must not be zero");
         // increment itemCount
         itemCount ++;
@@ -66,7 +68,8 @@ contract Marketplace is ReentrancyGuard{
             _tokenId,
             _price,
             payable(msg.sender),
-            false
+            false,
+            _isResell
         );
         //add fee percent for item
         royalties[itemCount] = Royalty (_feePercent);
@@ -91,12 +94,15 @@ contract Marketplace is ReentrancyGuard{
         Item storage item = items[_itemId];
         require(_itemId > 0 && _itemId <= itemCount, "Item doesn't exist");
         require(msg.value >= _totalPrice, "Not enough ether to pay item price and market fee");
+        require(msg.sender != item.seller, "You can't buy your own NFT");
         require(!item.sold, "Item has already sold");
         // pay seller and feeAccount
         item.seller.transfer(item.price);
         feeAccount.transfer(_totalPrice - item.price);
         // update item to sold
         item.sold = true;
+        // update item resell to false
+        item.resell = false;
         // transfer nft to buyer
         item.nft.transferFrom(address(this), msg.sender, item.tokenId);
         // emit Bought event
@@ -106,7 +112,8 @@ contract Marketplace is ReentrancyGuard{
             item.tokenId,
             item.price,
             item.seller,
-            msg.sender
+            msg.sender,
+            item.resell
         );
     }
 
