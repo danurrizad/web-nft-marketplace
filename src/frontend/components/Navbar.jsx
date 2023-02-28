@@ -8,7 +8,6 @@ const Navbar = ({isLoading, account, showAlertSuccess, setShowAlertSuccess, show
         <span className='justify-between flex'>
             <span className='justify-start flex 2xl:gap-x-28 gap-x-4 text-[13px] 2xl:text-[25px] xl:text-[25px] lg:text-[25px] lg:gap-x-20 xl:gap-x-28 py-8 2xl:px-20 xl:px-20 lg:px-20 px-4 '>
                 <Link to="/" className='hover:text-slate-300'>HOME</Link>
-                <Link to="/" className='hover:text-slate-300'>STORE</Link>
                 <Link to="/manage" className='hover:text-slate-300'>MANAGE</Link>
                 <Link to="/my-purchases" className='hover:text-slate-300 '>MY PURCHASES</Link>
             </span>
