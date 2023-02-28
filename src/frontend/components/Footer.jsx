@@ -10,7 +10,6 @@ const Footer = () => {
       <div>
           <ul className='text-white items-center justify-center text-[13px] 2xl:text-[22px] xl:text-[22px] lg:text-[22px] md:text-[18px] sm:text-[15px] py-10 flex gap-4 '>
               <Link to="/" className='hover:text-slate-300 '>HOME</Link>
-              <Link to="/" className='hover:text-slate-300'>STORE</Link>
               <Link to="/manage" className='hover:text-slate-300'>MANAGE</Link>
               <Link to="/my-purchases" className='hover:text-slate-300'>MY PURCHASES</Link>
           </ul>
