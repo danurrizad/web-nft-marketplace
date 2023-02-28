@@ -6,6 +6,7 @@ module.exports = {
     "./src/frontend/components/Landing.jsx",
     "./src/frontend/components/Loading.jsx",
     "./src/frontend/components/Modal.jsx",
+    "./src/frontend/components/ModalAlert.jsx",
     "./src/frontend/components/Footer.jsx",
     "./src/frontend/components/Manager.jsx",
     "./src/frontend/components/CreateAndList.jsx",
